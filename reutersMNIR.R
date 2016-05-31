@@ -3,7 +3,7 @@
 args <- commandArgs(TRUE)
 if(!exists("part")) part <- as.integer(args[1])
 
-suppressWarnings(library(distrom))
+suppressMessages(library(distrom))
 
 who  <- Sys.info()['nodename']
 what <- detectCores()
@@ -49,7 +49,7 @@ x <- sparseMatrix(i=as.integer(x[,2]), j=as.integer(x[,1]),x=x[,3],
 	dims=c(nlevels(did),nlevels(x[,1])),dimnames=list(NULL,levels(x[,1])))
 x <- x[,colSums(x>0)>100]
 
-m <- scan("m.txt")
+m <- scan("m.txt", quiet=TRUE)
 if(any(m==0)){
 	mz <- which(m==0)
 	x <- x[-mz,]
@@ -59,8 +59,8 @@ if(any(m==0)){
 }
 mu <- log(m)
 
-fit <- dmr(cl = cl, verb=2, maxit=100,
-    	covars = cBind(R,T,I), counts = x,  mu = mu, 
-        nzcheck = TRUE, standardize = FALSE, lmr=1e-4)
+fit <- dmr(cl = cl, 
+    	covars = cBind(R,T), counts = x,  mu = mu, 
+        verb=2, maxit=100, standardize = FALSE,  lmr=1e-4)
 
 saveRDS(fit,  sprintf("output/fit-%05d.rds",part), compress=FALSE) 
