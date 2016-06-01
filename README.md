@@ -1,2 +1,0 @@
-# NLP
-scratch nlp work
