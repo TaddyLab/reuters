@@ -1,0 +1,69 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,natbib,graphicx,amsthm,
+  setspace,sectsty,anysize,times,dsfont,enumerate}
+
+\usepackage[svgnames]{xcolor}
+
+\usepackage{lscape,arydshln,relsize,rotating,multirow}
+\usepackage{caption}
+\captionsetup{%
+  font=small,
+  labelfont=normalfont,
+  singlelinecheck=false,
+  justification=justified
+}
+\usepackage{algorithm,algorithmic}
+
+\newtheorem{prop}{\sc Proposition}[section]
+\newtheorem{theorem}{\sc Theorem}[section]
+\newtheorem{definition}{\sc Definition}[section]
+\newtheorem{lemma}{\sc Lemma}[section]
+\newtheorem{corollary}{\sc Corollary}[section]
+
+\marginsize{1.1in}{.9in}{.3in}{1.4in}
+
+\newcommand{\nb}{\color{blue}}
+\newcommand{\dbl}{\setstretch{1.5}}
+\newcommand{\sgl}{\setstretch{1.2}}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\mr}[1]{\mathrm{#1}}
+\newcommand{\bm}[1]{\mathbf{#1}}
+\newcommand{\ds}[1]{\mathds{#1}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand{\norm}[1]{|\!|#1|\!|_{1}}
+\newcommand{\code}[1]{{\smaller\sf#1}}
+\newcommand{\e}[1]{{\footnotesize$\times10$}{$^{#1}$}}
+
+\usepackage[bottom,hang,flushmargin]{footmisc}
+
+\pdfminorversion=4
+\begin{document}
+
+\sgl 
+
+\pagestyle{empty}
+
+~
+\vskip 1cm
+
+\noindent {\large \bf Comment on Airoldi \& Bischof: `A regularization scheme on word occurrence rates that
+improves estimation and interpretation of topical content'} 
+
+\vskip 1cm
+
+\noindent{\large Matt Taddy\\
+{Microsoft Research and Chicago Booth}\\
+\texttt{faculty.chicagobooth.edu/matt.taddy}}
+
+
+
+\vskip 2cm
+
+\setstretch{1}\small
+\bibliographystyle{chicago}
+\bibliography{"C:/Users/taddy/OneDrive - Microsoft/taddy.bib"}
+
+\end{document}
