@@ -3,6 +3,7 @@ library(Matrix)
 regions <- read.table("Reuters/rcv1-v2.regions.qrels")
 did <- factor(regions[,2])
 m <- rep(0,nlevels(did))
+u <- c()
 
 for(part in 1:20){
 	print(part)
@@ -18,6 +19,8 @@ for(part in 1:20){
  	x <- x[,colSums(x>0)>100]
 
  	m <- m + rowSums(x)
+ 	u <- c(u, colSums(x))
 }
 
 write.table(m, "m.txt", row.names=FALSE, col.names=FALSE)
+write.table(u, "u.txt", row.names=TRUE, col.names=FALSE, sep="\t")
