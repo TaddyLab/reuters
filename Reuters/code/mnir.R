@@ -50,7 +50,7 @@ x <- sparseMatrix(i=as.integer(x[,2]), j=as.integer(x[,1]),x=x[,3],
 	dims=c(nlevels(did),nlevels(x[,1])),dimnames=list(NULL,levels(x[,1])))
 x <- x[,colSums(x>0)>100]
 
-m <- scan("m.txt", quiet=TRUE)
+m <- scan("data/m.txt", quiet=TRUE)
 if(any(m==0)){
 	mz <- which(m==0)
 	x <- x[-mz,]
