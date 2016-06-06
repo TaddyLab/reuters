@@ -1,13 +1,14 @@
 # calculate m values
 library(Matrix)
-regions <- read.table("Reuters/rcv1-v2.regions.qrels")
+regions <- read.table("data/raw/rcv1-v2.regions.qrels")
 did <- factor(regions[,2])
 m <- rep(0,nlevels(did))
 u <- c()
+o <- c()
 
 for(part in 1:20){
 	print(part)
-	fname <- sprintf("reutersTokens/part-%05d", part)
+	fname <- sprintf("data/tokens/part-%05d", part)
 	if(!file.exists(fname)) stop("no counts file for this id")
 
 	x <- read.table(fname, sep="|")
@@ -20,7 +21,9 @@ for(part in 1:20){
 
  	m <- m + rowSums(x)
  	u <- c(u, colSums(x))
+	o <- c(o, colSums(x>0))
 }
 
 write.table(m, "m.txt", row.names=FALSE, col.names=FALSE)
 write.table(u, "u.txt", row.names=TRUE, col.names=FALSE, sep="\t")
+write.table(o, "o.txt", row.names=TRUE, col.names=FALSE, sep="\t")
