@@ -6,7 +6,7 @@ m <- rep(0,nlevels(did))
 u <- c()
 o <- c()
 
-for(part in 1:20){
+for(part in 0:20){
 	print(part)
 	fname <- sprintf("data/tokens/part-%05d", part)
 	if(!file.exists(fname)) stop("no counts file for this id")
@@ -24,6 +24,6 @@ for(part in 1:20){
 	o <- c(o, colSums(x>0))
 }
 
-write.table(m, "m.txt", row.names=FALSE, col.names=FALSE)
-write.table(u, "u.txt", row.names=TRUE, col.names=FALSE, sep="\t")
-write.table(o, "o.txt", row.names=TRUE, col.names=FALSE, sep="\t")
+v <- cbind(u,o)
+write.table(m, "data/m.txt", row.names=FALSE, col.names=FALSE)
+write.table(v, "data/vocab.csv", row.names=TRUE, col.names=FALSE, sep=",")
