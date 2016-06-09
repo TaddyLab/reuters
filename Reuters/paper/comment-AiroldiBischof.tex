@@ -67,9 +67,54 @@ Such labor-intensive narrative cycles are especially frustrating because the goa
   
 These difficulties seem inerrant to truly {\it unsupervised} topic analysis -- when you don't have or are not interested in non-text document attributes, even for a subset of your corpora.  But whenever such supervision is available, it can be used to guide estimation.  For example, it is common for topic modeling to be used as an effective tool for dimension reduction in a larger inferential pipeline.  Topic weights within each document are downstream inputs to a regression function for some document attributes (this is an especially useful strategy when these attributes are only known for a small subset of your corpora: unsupervised dimension reduction on the full dataset makes it easier to fit regression on the small set of labeled data).  In such settings, we can use left-out predictive performance in the downstream task as our arbitrator on topic quality.  Alternatively, one can have the document attributes directly inform topic estimation.  This is the strategy demonstrated nicely by Airoldi and Bischof in the current article.  They use a known document classification as the basis for a hierarchical model of topic generation, specified in such a way that each topic has a well identified and sparse role in language choice.  And it works! They provide word lists that are clearly intuitable and self consistent, without any of the usual steps of vocabulary narrowing.
 
-In my own work, I have suggested that there are many scenarios where one can avoid altogether fitting a latent variable topic model and instead make use of standard high-dimensional regression techniques.  \cite{taddy_multinomial_2013} describes a simple framework where the word counts within each document are treated as the response in a multinomial logistic regression onto document attributes.  That article focuses on how one can derive sufficient reduction projections from the resulting model fit, and use of these projections in prediction tasks.  \cite{taddy_distributed_2015} 
-shows how a closely related (and more scalable) version of the same algorithms can be used in a variety of text analysis in addition to the original prediction tasks: identifying words that are indicative of certain sentiment, subject, or even humor; projecting documents into a low dimensional space that represents the amount of funny or useful content; and as the first step in a pipeline where document projections serve as control variables in a causal inference scheme.
+In my own work, I have suggested that there are many scenarios where one can avoid  fitting a latent variable topic model and instead make use of standard high-dimensional regression techniques.  \cite{taddy_multinomial_2013} describes the multinomial inverse regression (MNIR) framework wherein word counts within each document are treated as the response in a multinomial logistic regression onto document attributes.  That article focuses on how one can derive sufficient reduction projections from the resulting model fit, and use of these projections in prediction tasks.  \cite{taddy_distributed_2015} 
+shows how a closely related (and more scalable) version of the MNIR algorithm  can be used in a variety of text analysis in addition to the original prediction tasks: identifying words that are indicative of certain sentiment, subject, or even humor; projecting documents into a low dimensional space that represents the amount of funny or useful content; and as the first step in a pipeline where document projections serve as control variables in a causal inference scheme.
 
+We can apply these ideas to the Reuters dataset studied here.  In the
+distributed version of MNIR from \cite{taddy_distributed_2015}, the word-$f$
+count for each document-$d$ is treated as Poisson random variable, using the
+author's notation, \begin{equation}\label{eq:taddyglm} w_{fd} \sim
+\mr{Pois}\left( L_d \exp\left[ \alpha_{0f} + \bs{\varphi}_f'\bm{I}_d
+\bs{\gamma}_f\bm{V}_d\right]\right). \end{equation} where $L_d = \sum_f
+w_{fd}$ is the document length and $\bm{I}_d$ contains topic membership
+information.  The new vector $\bm{V}_d$ can include any other desired
+conditioning information, such as the document {\it region} or {\it industry}
+tags supplied for Reuters documents (in addition to topics).  The inferred
+topic loadings -- elements of each $\bs{\varphi}_d$ -- are then interpretable
+as topic effects on word choice {\it after controlling for} the addtional
+document characteristics in $\bm{V}_d$.  
+
+This is a standard generalized linear model (up to a $\log L_d$ mean shift).  It can be estimated using any of the many available methods for such models, in particular regularized regression estimators that avoid overfit by placing penalties, such as $|\varphi_{jf}|$, on the elements of $\bs{\varphi}_f$.  We use the {\tt gamlr} R package implementing the POSE algorithms of \cite{taddy_one-step_2015}, which includes simple $\ell_1$ regularization (we use this specification, with BIC selection for the penalty magnitude).  We control for the document's geographic subject matter (as classified by Reuters) by including these tags in our $\bm{V}_d$ vectors.  We use the term tokenization supplied in \cite{lewis2004rcv1}.  All of the code for our analysis is in {\tt https://github.com/TaddyLab/reuters}.
+
+Looking to summarize our MNIR fit leads to an important question: what do we report?  The quality of the topic word-lists will be determined by our `top word' ranking function: do we rank by topic-word loading $\varphi$? Or by loading weighted by word occurence, or some other combination?  
+Similarly, although AB fit more interpretable word-topic loadings in a sparse supervised model, their FREX summarization seems essential for the successful interpretability.  More thoughtful topic summarization is also an easy way to get improved interpretability for standard LDA-type schemes, without requiring any new modeling.  For example, \cite{taddy_estimation_2012} describes topics in terms of the top words by topic `lift' (word probability within topic over the aggregate word occurence rate) and this gives more coherent word lists.
+
+For the MNIR Reuters data fit, we are interested in reporting the top words as a function of the corresponding $\varphi_{fk}$ loadings, for each topic $k$.  A ranking of top words by $\varphi_{fk}$ alone (the increase in log word intensity for that topic) yields rare terms; e.g., names of companies or individuals.  On the other extreme, ranking words by ${\bar w}_f\varphi_{fk}$ -- the occurence weighted loading -- yields top-word lists with noticable overlap across topics (i.e., the top words are too generic).  Inspired by Airoldi and Bischoff, I decided to use a criteria that can be tuned within a given application: $\varphi_{fk}{\bar w}_f^q$, where $q$ varies between 0 and 1.  In Table \ref{wordtab}, apply this criterion with $q=0.6$ to obtain lists of top 10 words for a selection of topics. To my eye, this listing has done a good job of selecting words that are uniquely associated with those given topics but are not so rare as to be unrecognizable (except for {\it ldd} and {\it uld} for defense).  Note that {\it monetary economics} is a sub-topic within {\it economics}; due to the hierarchical nature of topic membership, the words in the last line of our table can be interpreted as those which differentiate monetary topics from others {\it within} economics.
+
+\begin{table}[h]\footnotesize
+  \begin{tabular}{c|l}
+  \bf  Metals & \it gold, LME, copper, metal, COMEX, palladium, silver, aluminum, bullion, platinum \\
+ \bf  Environment & \it EPA, pollution, sulphur, environment, wildlife, emitter, soot, soybean, dioxide, species \\
+ \bf  Defense & \it Aberdeen, ldd, uld, chemical, defend, base, force, military, army, arms \\
+ \bf  Economics & \it nondurable, adjusted, unadjusted, percent, year, economy, statistics, month, growth, billion \\
+ \bf  Monetary Econ & \it policy, market, interest, bank, cent, rate, governor, make, meet, share 
+ \end{tabular}
+ \caption{\label{wordtab} The top 10 words in a selection of topics, ranked by $\varphi_{fk} {\bar w}_f^{0.6}$. These are expanded from the stemmed tokens in \cite{lewis2004rcv1}.  }
+\end{table}  
+
+Finally, a question: what are the lessons from this work
+towards more interpretable {\it unsupervised} modeling? The Reuters
+annotations are clearly of huge value for building an interpretable model.
+In HPC or MNIR or another analysis framework, this supervision allows us to avoid the
+difficult task of topic interpretation and labeling.  However, most available
+text data is annotated with only a small number of labels of low relevance.
+This is why unsupervised topic modeling, especially the LDA of
+\cite{blei2012probabilistic}, is massively useful and popular. The authors
+outline in Section 3.3 a procedure for estimating the topics associated with
+new  unlabelled documents, but there doesn't seem to be a pathway for these
+documents to inform model estimation.  That is, like MNIR and others , your
+scheme is inherrently supervised.  It would be great if there are lessons in
+this article that apply when we need to tell stories with little or no supervision.
 
 \setstretch{1}\small
 \bibliographystyle{chicago}

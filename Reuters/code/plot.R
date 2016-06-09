@@ -10,20 +10,20 @@ for(part in 0:20)
 
 class(fit) <- "dmr"
 Bbic <- coef(fit, k=log(804414))
-Baic <- coef(fit)
+#Baic <- coef(fit)
 
-getnz <- function(v, w=1, n=10){
+getnz <- function(v, w=1, n=10, descr=""){
 	b <- exp(Bbic[v,])*w
-	print(names(sort(b[b!=0],decreasing=TRUE))[1:n])
+	bn <- names(sort(b[b!=0],decreasing=TRUE))[1:n]
+ 	cat(" \\bf ", descr, "&", paste(bn, collapse=", "), "\\\\\n")
 }
 
-w = vocab[,"docs"]^{0.6}
-getnz("M142", w=w)  # metals trading
-getnz("GENV", w=w)  # environment
-getnz("GDEF", w=w)  # defense
-getnz("ECAT", w=w)  # economics
-getnz("E12", w=w)  # monetary economics
-getnz("E121", w=w)  # money supply
+vars <- c("Metals","Environment","Defense",
+	"Economics","Monetary Econ","Money Supply")
+names(vars) <- c("M142","GENV","GDEF","ECAT","E12","E121")
+for(v in names(vars)) 
+	getnz(v, w=vocab[,"docs"]^{0.6}, descr=vars[v])
+
 
 
 # > w = vocab[,"docs"]^{0.6}
