@@ -58,13 +58,28 @@ improves estimation and interpretation of topical content}}
  
 
 \vskip 1cm\noindent
-This is an interesting and informative article by Airoldi and Bischof (AB), and I am grateful for the opportunity to comment.  The authors are focused on improving  {\it interpretability} of statistical language models, which is essential for their applicability in the social sciences.
+This is an interesting and informative article by Airoldi and Bischof (AB), and I am grateful for the opportunity to comment.  The authors are focused on improving  {\it interpretability} of statistical language models, which is essential for their applicability in the social sciences.  
 
-In my collaborations with economists and others, too much effort is spent  pouring through the lists of words that are `top' or representative within, say, latent topics from LDA \citep{blei_latent_2003} in order to build a narrative around the fitted language model.  Often, the topics are not initially intuitive or self-consistent, and hence one begins iterating through a series of repeated model estimations using different model specifications (e.g., number of topics) or vocabulary sets (e.g., via stop-word removal or minimum word-occurrence thresholds). 
+In my collaborations with economists and others, much effort has sometimes been spent  pouring through the lists of words that are `top' or representative within, say, latent topics from LDA \citep{blei_latent_2003} in order to build a narrative around the fitted language model.  Often, the topics are not initially intuitive or self-consistent, and hence one begins iterating through a series of repeated model estimations using different  specifications (e.g., number of topics) or vocabulary sets (e.g., via stop-word removal or minimum word-occurrence thresholds). 
 
-This labor-intensive iterative model building is especially frustrating when the goals are unclear. If we want lists of words that we already understand as `representative' of a given topic or feeling, we can simply select these words using our own or other's expert opinion \citep[e.g.,][]{tetlock_giving_2007}.  If we just want the best fit for the data, we can use established model selection techniques (e.g., the Bayes factors for LDA in \citealp{taddy_estimation_2012}, or techniques in \citealp{airoldi_reconceptualizing_2010}).  However, the desired outcome often lives somewhere in-between: we want topics that are interpretable within existing concepts but which contain application-specific content and whose prevalence within the documents can be described as `derived from the data'.  
+This labor-intensive iterative model building is especially frustrating when the goals are unclear. If we want lists of words that we already understand as `representative' of a given topic or feeling, we can simply select these words using our own or other's expert opinion \citep[e.g.,][]{tetlock_giving_2007}.  If we just want the best fit for the data, we can use established model selection techniques (e.g., techniques in \citealp{airoldi_reconceptualizing_2010} or the Bayes factors for LDA in \citealp{taddy_estimation_2012}).  However, the desired outcome often lives somewhere in-between: we want topics that are interpretable within existing concepts but which contain application-specific content and whose prevalence within the documents can be described as `derived from the data'.  
   
-These difficulties seem inerrant to truly {\it unsupervised} topic analysis -- when you don't have relevant non-text document attributes, even for a subset of your corpora.  But whenever such supervision is available, it can be used to guide estimation.  For example, it is common to use topic modeling as a dimension reduction step in a larger pipeline.  Topic weights within each document are downstream inputs to a function that predicts some document attributes (this is an especially useful strategy when these attributes are only known for a small subset of your corpora: unsupervised dimension reduction on the full dataset makes it easier to fit regression on the smaller set of labeled documents).  In such settings, we can use left-out predictive performance in the downstream task as our arbitrator on topic quality.  Alternatively, one can specify and estimate models that have document attributes directly inform the topics.  This is the strategy demonstrated nicely in AB's work here: they use a known document classification as the basis for a hierarchical model of topic generation, specified in such a way that each topic has a well identified and sparse role in language choice.  And it works! AB provide word lists that are clearly intuitable and self consistent, without any of the usual steps of vocabulary narrowing.
+Difficulties in model interpretation are inherent to truly {\it unsupervised}
+topic analysis -- when you are without relevant non-text document attributes,
+even for a subset of your corpora.  But whenever such supervision is
+available, it can be used to guide estimation.  For example, it is common to
+use unsupervised topic modeling as a dimension reduction step in a larger
+pipeline.  Document-topic weights  are downstream inputs to a function that
+predicts some  attributes (this is an especially useful strategy when
+these attributes are  known only for a small subset of your corpora).  In such
+settings, we can use out-of-sample predictive performance in the downstream
+task as the arbitrator on topic quality.  Alternatively, one can specify and
+estimate  models that force document attributes to directly inform the topics.
+This is the strategy demonstrated nicely in AB's work here: they use a known
+document classification as the basis for a hierarchical model of topic
+generation, specified in such a way that each topic has a well identified role
+in language choice.  And it works! AB provide word lists that are intuitive
+and self consistent, without any of the usual steps of vocabulary narrowing.
 
 In my own work, I have suggested that when document attributes are available you can often avoid  latent variable models altogether and instead make use of standard high-dimensional regression techniques (others have made this point; e.g., \citealt{jia2014concise}).  In the multinomial inverse regression (MNIR) framework of \cite{taddy_multinomial_2013},  word counts  are treated as the response in a multinomial logistic regression onto document attributes.  That article emphasizes the derivation of sufficient  projections from the model and use of these projections in prediction.  \cite{taddy_distributed_2015} 
 describes a scalable distributed version of the MNIR algorithm and illustrates its use in a variety of additional tasks: identifying words that are indicative of a certain sentiment or subject; projecting documents into a low-dimensional space that quantifies, say, funny or useful content; and in constructing text-based control variables for a causal inference scheme.
@@ -81,11 +96,24 @@ tags supplied by Reuters.  The inferred
 topic loadings -- elements of each $\bs{\varphi}_d$ -- are then interpretable
 as topic effects on word choice {\it after controlling for} the characteristics in $\bm{V}_d$.  
 
-This is a standard generalized linear model (up to a $\log L_d$ shift).  It can be estimated using any of the many available methods for such models, in particular regularized regression estimators that avoid overfit by placing penalties on the elements of $\bs{\varphi}_f$.  I use the {\tt gamlr} R package  \citep[implementing the POSE algorithms of][]{taddy_one-step_2015} to apply simple $\ell_1$ regularization  with BIC selection for the penalty magnitude; everything is run `out-of-the-box' without careful tuning.  I control for the document's geographic focus (as classified by Reuters) by including these tags in our $\bm{V}_d$ vectors.  I took the  tokenization supplied in \cite{lewis2004rcv1} and all of my code is in {\tt https://github.com/TaddyLab/reuters}.
+This is a standard generalized linear model (up to a $\log L_d$ shift).  It can be estimated using any of the many available methods for such models, in particular regularized regression estimators that avoid overfit by placing penalties on the elements of $\bs{\varphi}_f$.  I use the {\tt gamlr} R package  \citep[implementing the POSE algorithms of][]{taddy_one-step_2015} to apply simple $\ell_1$ regularization  with BIC selection for the penalty magnitude.  Everything is run `out-of-the-box' without careful tuning, and regressions for different words are distributed across many compute nodes via the {\tt distrom} package.  I control for each document's geographic focus (as classified by Reuters) by including these tags in our $\bm{V}_d$ vectors.  I took the  tokenization supplied in \cite{lewis2004rcv1} and all of the analysis code is in {\tt https://github.com/TaddyLab/reuters}.
 
-Table \ref{wordtab} shows lists of top-10 words for a selection of topics.  These words are `top' as ranked by their corresponding MNIR loading $\varphi_{fk}$, for each topic $k$,  multiplied by a measure of word prevalence (we revisit this below).  The analysis has done a good job of selecting words that are uniquely associated with those given topics but are not so rare as to be unrecognizable (except  {\it ldd} and {\it uld} for defense).  Note that {\it monetary economics} is a sub-topic within {\it economics}; due to the hierarchical nature of topic membership, the words in the last line of our table are those which differentiate monetary topics from others {\it within} economics.  This happens naturally when such hierarchical information is encoded in the regression design (i.e., in $\mathbf{I}_d$).
+Table \ref{wordtab} shows lists of top-10 words for a selection of topics.
+These words are `top' as ranked by their corresponding MNIR loading,
+$\varphi_{fk}$ for each topic $k$,  multiplied by a measure of word
+prevalence.  The analysis has done a good job of selecting words that are
+uniquely associated with those given topics but are not so rare as to be
+unrecognizable (except  {\it ldd} and {\it uld} for defense).  Note that {\it
+monetary economics} is a sub-topic within {\it economics}; due to the
+hierarchical nature of topic membership, the words in the last line of our
+table are those which differentiate monetary topics from others {\it within}
+economics.  This happens naturally when hierarchical information is encoded in
+the regression design (i.e., in $\mathbf{I}_d$). Indeed, given that 
+simple log-linear regressions can be used to resolve complex collinear effects of
+topics and other attributes, I would like to hear from AB what they see as the advantages of instead building and inferring a full generative model (which is  more
+computationally expensive, even with nice HMC).
 
-\begin{table}[ht]\footnotesize
+\begin{table}[t]\footnotesize
   \begin{tabular}{c|l}
   \bf  Metals & \it gold, LME, copper, metal, COMEX, palladium, silver, aluminum, bullion, platinum \\
  \bf  Environment & \it EPA, pollution, sulphur, environment, wildlife, emitter, soot, soybean, dioxide, species \\
@@ -96,16 +124,16 @@ Table \ref{wordtab} shows lists of top-10 words for a selection of topics.  Thes
  \caption{\label{wordtab} Top 10 words in a selection of topics, ranked by $\varphi_{fk} {\bar w}_f^{0.6}$ for $\varphi_{fk}$ estimated in the MNIR specification of (\ref{eq:taddyglm}). These words are expanded from the stemmed tokens of \cite{lewis2004rcv1}.  }
 \end{table}  
 
-The quality of the word-lists in (\ref{wordtab}) is dependent upon the choice of `top word' ranking function.  Ranking by loading $\varphi_{fk}$ alone  yields mostly rare terms; e.g., names of companies or individuals.  On the other hand, ranking by ${\bar w}_f\varphi_{fk}$, where ${\bar w}_f = \tfrac{1}{D}\sum_d w_{fd}$, leads to noticeable overlap across topics (i.e., the top words are too generic).  I use a criteria that can be tuned between these two extremes: $\varphi_{fk}{\bar w}_f^q$, where $q \in [0,1]$ and $q=0.6$ in Table (\ref{wordtab}). I was inspired here by the example of AB's FREX, which also balances between topic specificity and usage probability and seems to be a key ingredient in their framework.   It's worth mentioning that strategic  summarization can also be used to build intuition about less obviously interpretable model fits.  For example, \cite{taddy_estimation_2012} describes topics from standard LDA through words ranked by topic `lift' (word probability within topic over the aggregate word rate) and this gives more coherent word lists than ranking by within-topic probability.
+The quality of the word-lists in Table \ref{wordtab} is dependent upon the choice of `top word' ranking function.  Ranking by loading $\varphi_{fk}$ alone  yields mostly rare terms; e.g., names of companies or individuals.  On the other hand, ranking by ${\bar w}_f\varphi_{fk}$, where ${\bar w}_f = \tfrac{1}{D}\sum_d w_{fd}$, leads to noticeable overlap across topics (i.e., the top words are too generic).  I use a criteria that can be tuned between these two extremes: $\varphi_{fk}{\bar w}_f^q$, where $q \in [0,1]$.  Table \ref{wordtab} uses $q=0.6$. I was inspired here by the example of AB's FREX, which similarly balances between topic specificity and usage probability via a tuning parameter.  FREX seems to be a key ingredient in AB's framework, so that both my lists and AB's  are the results of  strategic model summarization.   Careful summarization can also bring intuition to less obviously interpretable models; e.g., for standard LDA, \cite{taddy_estimation_2012}  ranks words by their topic `lift' (word probability within topic over the aggregate word rate) for more coherent word lists than from the usual within-topic probability ranking.
 
-Finally, a question: what are the lessons from this work
+Finally, a question: what are the lessons from AB's work
 towards more interpretable {\it unsupervised} modeling? The Reuters
 annotations are clearly of huge value for building an interpretable model.
 In HPC or MNIR,  this supervision allows us to avoid the
 difficult task of topic interpretation and labeling.  However, most available
 text data is annotated with only a small number of labels of low relevance.
-This is why unsupervised topic modeling, especially the LDA of
-\cite{blei2012probabilistic}, is massively useful and popular (and it is why advice such as that in \citealt{wallach_rethinking_2009}, on more interpretable {\it unsupervised} modeling, is important). AB
+This is why unsupervised topic modeling, especially  LDA from
+\cite{blei_latent_2003} and its extensions, is massively useful and popular (and it is why advice such as that in \citealt{wallach_rethinking_2009}, on more interpretable {\it unsupervised} modeling, is important). AB
 outline in Section 3.3 a procedure for estimating the topics associated with
 new  unlabeled documents, but there doesn't seem to be a pathway for these
 documents to inform model estimation.  That is, like MNIR, AB's
