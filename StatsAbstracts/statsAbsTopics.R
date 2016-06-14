@@ -25,6 +25,9 @@ notemp <- rowSums(x)>0
 x <- x[notemp,]
 meta <- meta[notemp,]
 
+## STM
+library(stm)
+
 ## topic modeling
 library(maptpx)
 x <- as.simple_triplet_matrix(x)
@@ -59,3 +62,5 @@ w <- tpc$omega[,-1]*10 #intercept is mathstats
 colnames(d) <- levels(factor(meta$year))
 summary(citefit <- lm(y ~ d + w -1))
 # w3     0.108089   0.009906  10.911  < 2e-16 ***
+
+

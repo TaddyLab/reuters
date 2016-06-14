@@ -1,0 +1,9 @@
+### STM review
+
+This is an excellent vignette for an excellent package.  I have been aware of the STM work but have not actually used their code before now.  I am impressed with the range of functionality, the ease of use, and the performance.  This vignette is also well written and informative.  I will be recommending both the package and this document to my students and colleagues.
+
+There are no changes I would require for publication.  I have some minor advice below that can be used as desired.
+
+* I couldn't connect to the cleaned data url: http://goo.gl/tsprNO
+* perhaps warn readers from the outset that a saved workspace is available.  Some readers (e.g., me) prefer to run code as they read these vignettes and would have skipped to the saved workspace.
+* typo in first paragraph of 3.4: forthcomingb.
