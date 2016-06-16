@@ -1,0 +1,68 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,natbib,graphicx,amsthm,
+  setspace,sectsty,anysize,times,dsfont,enumerate}
+
+\usepackage[svgnames]{xcolor}
+
+\usepackage{lscape,arydshln,relsize,rotating,multirow}
+\usepackage{caption}
+\captionsetup{%
+  font=small,
+  labelfont=normalfont,
+  singlelinecheck=false,
+  justification=justified
+}
+\usepackage{algorithm,algorithmic}
+
+\newtheorem{prop}{\sc Proposition}[section]
+\newtheorem{theorem}{\sc Theorem}[section]
+\newtheorem{definition}{\sc Definition}[section]
+\newtheorem{lemma}{\sc Lemma}[section]
+\newtheorem{corollary}{\sc Corollary}[section]
+
+\marginsize{1.1in}{.9in}{.3in}{1.4in}
+
+\newcommand{\nb}{\color{blue}}
+\newcommand{\dbl}{\setstretch{1.5}}
+\newcommand{\sgl}{\setstretch{1.4}}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\mr}[1]{\mathrm{#1}}
+\newcommand{\bm}[1]{\mathbf{#1}}
+\newcommand{\ds}[1]{\mathds{#1}}
+\newcommand{\indep}{\perp\!\!\!\perp}
+\DeclareMathOperator*{\argmin}{argmin}
+\newcommand{\norm}[1]{|\!|#1|\!|_{1}}
+\newcommand{\code}[1]{{\smaller\sf#1}}
+\newcommand{\e}[1]{{\footnotesize$\times10$}{$^{#1}$}}
+
+\usepackage[bottom,hang,flushmargin]{footmisc}
+
+\pdfminorversion=4
+\begin{document}
+
+\sgl 
+
+\pagestyle{empty}
+
+\noindent {\Large \bf Comment: \textit{Coauthorship and citation networks for
+statisticians}} 
+
+\vskip .5cm
+
+\noindent{\large Mladen Kolar -- University of Chicago Booth School of Business\\Matt Taddy -- 
+{Microsoft Research and Chicago Booth}}
+
+ 
+
+\vskip 1cm\noindent
+This article by Ji and Jin (JJ throughout) provides a network analysis, by two experts in the field, on the connections between statistics research papers.
+This is not just an exercise in navel-gazing.  It gives us the opportunity to compare results from the methods we advocate to our intuition in an area we know well: our profession.  And we think that the article contains some lessons for how we use network models and what data we choose to analyze.
+
+
+\setstretch{1}\small
+\bibliographystyle{chicago}
+\bibliography{taddy}
+
+\end{document}
