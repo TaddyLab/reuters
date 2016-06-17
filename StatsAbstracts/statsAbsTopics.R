@@ -29,6 +29,9 @@ meta <- meta[notemp,]
 library(maptpx)
 x <- as.simple_triplet_matrix(x)
 
+# tpc <- topics(x, K=4:16, verb=TRUE)
+# saveRDS(tpc, file="WINtpc.rds",compress=FALSE)
+tpc <- readRDS("tpc.rds")
 
 tops <- function(tpc, deltas=NULL, plotit=TRUE){
 	sumtp <- summary(tpc,6)
@@ -62,17 +65,18 @@ tops <- function(tpc, deltas=NULL, plotit=TRUE){
 }
 tops( tpc, deltas=c(1,4,8))
 
-# tpc <- topics(x, K=4:16, verb=TRUE)
-# saveRDS(tpc, file="WINtpc.rds",compress=FALSE)
-tpc <- readRDS("tpc.rds")
 
-
-
-meta[order(-tpc$omega[,1])[1:5],"title"]
-meta[order(-tpc$omega[,2])[1:5],"title"]
-meta[order(-tpc$omega[,3])[1:5],"title"]
-meta[order(-tpc$omega[,4])[1:5],"title"]
-
+print("topic 1 articles")
+print(meta[order(-tpc$omega[,1])[1:5],"title"])
+print("topic 4 articles")
+print(meta[order(-tpc$omega[,4])[1:5],"title"])
+print("topic 8 articles")
+print(meta[order(-tpc$omega[,8])[1:5],"title"])
+# [1] "The adaptive lasso and its oracle properties"                                         
+# [2] "Regularization and variable selection via the elastic net"                            
+# [3] "On the adaptive elastic-net with a diverging number of parameters"                    
+# [4] "Variable selection with the strong heredity constraint and its oracle property"       
+# [5] "Shrinkage tuning parameter selection with a diverging number of parameters"           
 
 ## Regression stuff
 y <- meta$citCounts/(2013-meta$year)
@@ -80,8 +84,7 @@ d <- model.matrix(~factor(meta$year)-1)
 w <- tpc$omega[,-1]*10 #intercept is mathstats
 colnames(d) <- levels(factor(meta$year))
 summary(citefit <- lm(y ~ d + w -1))
-# w3     0.108089   0.009906  10.911  < 2e-16 ***
-
+# w8     0.105125   0.010733   9.795  < 2e-16 ***
 
 ## STM
 library(stm)
@@ -89,10 +92,10 @@ docs =  lapply(split(cbind(x$j,x$v), x$i),
 	function(jv) matrix(jv, nrow=2, byrow=TRUE))
 vocab <- colnames(x)
 docmet <- data.frame(pubdate=factor(meta$year), cites=y)
-# stmfit <- stm(docs, vocab, K=15, 
-# 	prevalence =~ cites + pubdate, data=docmet, 
-# 	max.em.its=75,  init.type="Spectral")
-# saveRDS(stmfit,file="stm.rds", compress=FALSE)
+stmfit <- stm(docs, vocab, K=15, 
+	prevalence =~ cites + pubdate, data=docmet, 
+	max.em.its=75,  init.type="Spectral")
+saveRDS(stmfit,file="stm.rds", compress=FALSE)
 stmfit <- readRDS("stm.rds")
 
 
@@ -128,15 +131,15 @@ topsSTM <- function(stm, deltas=NULL, dcol=NULL, plotit=TRUE){
 	}
 	invisible()
 }
-topsSTM(stmfit, deltas=c(2,5,14,15),dcol=c(4,"orange",3,2))
+topsSTM(stmfit)#, deltas=c(2,5,14,15),dcol=c(4,"orange",3,2))
 
-prep <- estimateEffect(1:16 ~ cites + pubdate, stmfit,
+prep <- estimateEffect(1:15 ~ cites + pubdate, stmfit,
 			meta = docmet, uncertainty = "Global")
 plot.estimateEffect(prep, covariate="cites", method="continuous", topic=2)
 
 citebeta <- sapply(prep$parameters[[2]], function(v) v$est["cites"])
 
-# > mean(citebeta)
-# [1] 0.0450501
-# > sd(citebeta)
-# [1] 0.004656015
+mean(citebeta)
+# [1] 0.04749852
+sd(citebeta)
+# [1] 0.004547176 
