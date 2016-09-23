@@ -1,0 +1,65 @@
+\begin{thebibliography}{}
+
+\bibitem[\protect\citeauthoryear{Airoldi, Erosheva, Fienberg, Joutard, Love,
+  and Shringarpure}{Airoldi et~al.}{2010}]{airoldi_reconceptualizing_2010}
+Airoldi, E.~M., E.~A. Erosheva, S.~E. Fienberg, C.~Joutard, T.~Love, and
+  S.~Shringarpure (2010).
+\newblock Reconceptualizing the {Classification} of {PNAS} {Articles}.
+\newblock {\em Proceedings of the National Academy of Sciences\/}~{\em 107},
+  20899--20904.
+
+\bibitem[\protect\citeauthoryear{Blei, Ng, and Jordan}{Blei
+  et~al.}{2003}]{blei_latent_2003}
+Blei, D.~M., A.~Y. Ng, and M.~I. Jordan (2003).
+\newblock Latent {D}irichlet allocation.
+\newblock {\em the Journal of machine Learning research\/}~{\em 3}, 993--1022.
+
+\bibitem[\protect\citeauthoryear{Jia, Miratrix, Yu, Gawalt, El~Ghaoui,
+  Barnesmoore, Clavier, et~al.}{Jia et~al.}{2014}]{jia2014concise}
+Jia, J., L.~Miratrix, B.~Yu, B.~Gawalt, L.~El~Ghaoui, L.~Barnesmoore,
+  S.~Clavier, et~al. (2014).
+\newblock Concise comparative summaries (ccs) of large text corpora with a
+  human experiment.
+\newblock {\em The Annals of Applied Statistics\/}~{\em 8}, 499--529.
+
+\bibitem[\protect\citeauthoryear{Lewis, Yang, Rose, and Li}{Lewis
+  et~al.}{2004}]{lewis2004rcv1}
+Lewis, D.~D., Y.~Yang, T.~G. Rose, and F.~Li (2004).
+\newblock Rcv1: A new benchmark collection for text categorization research.
+\newblock {\em The Journal of Machine Learning Research\/}~{\em 5}, 361--397.
+
+\bibitem[\protect\citeauthoryear{Taddy}{Taddy}{2012}]{taddy_estimation_2012}
+Taddy, M. (2012).
+\newblock On estimation and selection for topic models.
+\newblock In {\em Proceedings of the 15th {International} {Conference} on
+  {Artificial} {Intelligence} and {Statistics} ({AISTATS} 2012)}.
+
+\bibitem[\protect\citeauthoryear{Taddy}{Taddy}{2013}]{taddy_multinomial_2013}
+Taddy, M. (2013).
+\newblock Multinomial inverse regression for text analysis.
+\newblock {\em Journal of the American Statistical Association\/}~{\em 108},
+  755--770.
+
+\bibitem[\protect\citeauthoryear{Taddy}{Taddy}{2015a}]{taddy_distributed_2015}
+Taddy, M. (2015a).
+\newblock Distributed multinomial regression.
+\newblock {\em The Annals of Applied Statistics\/}~{\em 9}, 1394--1414.
+
+\bibitem[\protect\citeauthoryear{Taddy}{Taddy}{2015b}]{taddy_one-step_2015}
+Taddy, M. (2015b).
+\newblock One-step estimator paths for concave regularization.
+\newblock \textit{arXiv:1308.5623}.
+
+\bibitem[\protect\citeauthoryear{Tetlock}{Tetlock}{2007}]{tetlock_giving_2007}
+Tetlock, P. (2007).
+\newblock Giving {Content} to {Investor} {Sentiment}: {The} {Role} of {Media}
+  in the {Stock} {Market}.
+\newblock {\em Journal of Finance\/}~{\em 62}, 1139--1168.
+
+\bibitem[\protect\citeauthoryear{Wallach, Mimno, and McCallum}{Wallach
+  et~al.}{2009}]{wallach_rethinking_2009}
+Wallach, H.~M., D.~Mimno, and A.~McCallum (2009).
+\newblock Rethinking {LDA}: {Why} {Priors} {Matter}.
+\newblock In {\em Neural {Information} {Processing} {Systems}}.
+
+\end{thebibliography}

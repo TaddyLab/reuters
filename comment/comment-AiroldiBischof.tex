@@ -29,7 +29,7 @@
 
 \usepackage[bottom,hang,flushmargin]{footmisc}
 
-\pdfminorversion=4
+
 \begin{document}
 
 \setstretch{1.5}
@@ -46,11 +46,11 @@ improves estimation and interpretation of topical content}}
  
 
 \vskip 1cm\noindent
-This is an interesting and informative article by Airoldi and Bischof (AB), and I am grateful for the opportunity to comment.  The authors are focused on improving  {\it interpretability} of statistical language models, which is essential for their applicability in the social sciences.  
+This is an interesting and informative article by Airoldi and Bischof (AB), and I am grateful for the opportunity to comment.  The authors are focused on improving  {\it interpretability} of statistical language models, which is essential for their adoption in the social sciences.  
 
-In my collaborations with economists and others, much effort has sometimes been spent  pouring through the lists of words that are `top' or representative within, say, latent topics from LDA \citep{blei_latent_2003} in order to build a narrative around the fitted language model.  Often, the topics are not initially intuitive or self-consistent, and hence one begins iterating through a series of repeated model estimations using different  specifications (e.g., number of topics) or vocabulary sets (e.g., via stop-word removal or minimum word-occurrence thresholds). 
+In my collaborations with economists and others, much effort has  been spent  pouring through the lists of words that are `top' or representative within, say, latent topics from LDA \citep{blei_latent_2003} in order to build a narrative around the fitted language model.  Often, the topics are not initially intuitive or self-consistent, and hence one begins iterating through a series of repeated model estimations using different  specifications (e.g., number of topics) or vocabulary sets (e.g., via stop-word removal or minimum word-occurrence thresholds). 
 
-This labor-intensive iterative model building is especially frustrating when the goals are unclear. If we want lists of words that we already understand as `representative' of a given topic or feeling, we can simply select these words using our own or other's expert opinion \citep[e.g.,][]{tetlock_giving_2007}.  If we just want the best fit for the data, we can use established model selection techniques (e.g., techniques in \citealp{airoldi_reconceptualizing_2010} or the Bayes factors for LDA in \citealp{taddy_estimation_2012}).  However, the desired outcome often lives somewhere in-between: we want topics that are interpretable within existing concepts but which contain application-specific content and whose prevalence within the documents can be described as `derived from the data'.  
+This labor-intensive iterative model building is especially frustrating when the goals are unclear. If we want lists of words that we already understand as `representative' of a given topic or feeling, we can simply select these words using our own or other's expert opinion \citep[e.g.,][]{tetlock_giving_2007}.  If we just want the best fit for the data, we can use established model selection techniques (e.g., those in \citealp{airoldi_reconceptualizing_2010} or the Bayes factors for LDA in \citealp{taddy_estimation_2012}).  However, the desired outcome often lives somewhere in-between: we want topics that are interpretable within existing concepts but which contain application-specific content and whose prevalence within the documents can be described as `derived from the data'.  
   
 Difficulties in model interpretation are inherent to truly {\it unsupervised}
 topic analysis -- when you are without relevant non-text document attributes,
@@ -69,7 +69,7 @@ generation, specified in such a way that each topic has a well identified role
 in language choice.  And it works! AB provide word lists that are intuitive
 and self consistent, without any of the usual steps of vocabulary narrowing.
 
-In my own work, I have suggested that when document attributes are available you can often avoid  latent variable models altogether and instead make use of standard high-dimensional regression techniques (others have made this point; e.g., \citealt{jia2014concise}).  In the multinomial inverse regression (MNIR) framework of \cite{taddy_multinomial_2013},  word counts  are treated as the response in a multinomial logistic regression onto document attributes.  That article emphasizes the derivation of sufficient  projections from the model and use of these projections in prediction.  \cite{taddy_distributed_2015} 
+In my own work, I have suggested that  you can often avoid  latent variable models altogether and instead make use of standard high-dimensional regression techniques (others have made this point; e.g., \citealt{jia2014concise}).  In the multinomial inverse regression (MNIR) framework of \cite{taddy_multinomial_2013},  word counts  are treated as the response in a multinomial logistic regression onto document attributes.  That article emphasizes the derivation of sufficient  projections from the model and use of these projections in prediction.  \cite{taddy_distributed_2015} 
 describes a scalable distributed version of the MNIR algorithm and illustrates its use in a variety of additional tasks: identifying words that are indicative of a certain sentiment or subject; projecting documents into a low-dimensional space that quantifies, say, funny or useful content; and in constructing text-based control variables for a causal inference scheme.
 
 We can apply these ideas on the Reuters dataset studied by AB.  In the
@@ -123,7 +123,7 @@ text data is annotated with only a small number of labels of low relevance.
 This is why unsupervised topic modeling, especially  LDA from
 \cite{blei_latent_2003} and its extensions, is massively useful and popular (and it is why advice such as that in \citealt{wallach_rethinking_2009}, on more interpretable {\it unsupervised} modeling, is important). AB
 outline in Section 3.3 a procedure for estimating the topics associated with
-new  unlabeled documents, but there doesn't seem to be a pathway for these
+new  unlabeled documents, but there does not seem to be a pathway for these
 documents to inform model estimation.  That is, like MNIR, AB's
 scheme is inherently supervised.  It would be great if there are lessons in
 this article that apply when we need to tell stories with little or no supervision.
